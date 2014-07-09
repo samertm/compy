@@ -41,6 +41,8 @@ func handleCommentsAdd(w http.ResponseWriter, r *http.Request) {
 			Comment: c,
 		}
 		io.WriteString(w, "comment added successfully\n")
+	} else if r.Method == "GET" {
+		io.WriteString(w, "test :)")
 	}
 }
 
