@@ -1,17 +1,19 @@
 package engine
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"strconv"
 	"time"
 )
 
 type Comment struct {
-	id     int // unique id
-	Time   time.Time
-	Author string
-	Email  string
-	Body   string
+	id     int       `json:"id"` // unique id
+	Time   time.Time `json:"time"`
+	Author string    `json:"author"`
+	Email  string    `json:"email"`
+	Body   string    `json:"body"`
 }
 
 func (c *Comment) String() string {
@@ -25,7 +27,7 @@ func (c *Comment) String() string {
 
 type GetPair struct {
 	PageId   string // page id
-	Comments chan []*Comment
+	Comments chan []byte
 }
 
 type SavePair struct {
@@ -56,7 +58,12 @@ func (c *Comments) Run() {
 		select {
 		case g := <-c.Get:
 			if comments, ok := c.pages[g.PageId]; ok {
-				g.Comments <- comments
+				j, err := json.Marshal(comments)
+				if err != nil {
+					log.Print(err)
+				} else {
+					g.Comments <- j
+				}
 			}
 			close(g.Comments)
 		case s := <-c.Save:

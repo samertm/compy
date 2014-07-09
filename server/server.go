@@ -50,17 +50,15 @@ func handleCommentsGet(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		c := make(chan []*engine.Comment)
+		c := make(chan []byte)
 		comments.Get <- engine.GetPair{
-			PageId: form["pageid"][0],
+			PageId:   form["pageid"][0],
 			Comments: c,
 		}
-		comms := <- c
-		var s string
-		for _, com := range comms {
-			s += com.String()
+		if comms, ok := <-c; ok {
+			// TODO get equiv write-all function for bytes
+			io.WriteString(w, string(comms))
 		}
-		io.WriteString(w, s)
 	}
 }
 
