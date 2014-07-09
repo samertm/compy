@@ -81,16 +81,12 @@ func (c *Comments) Run() {
 
 var commentId int
 
-// TODO add time stuff :D
-func NewComment(time, author, email, body string) *Comment {
-	// t, err := time.Parse(what do i do???)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+func NewComment(author, email, body string) *Comment {
 	id := commentId
 	commentId++
 	return &Comment{
 		id:     id,
+		Time: time.Now(),
 		Author: author,
 		Email:  email,
 		Body:   body,

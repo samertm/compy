@@ -29,18 +29,18 @@ func checkForm(data url.Values, values ...string) error {
 
 func handleCommentsAdd(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
-		form, err := parseForm(r, "pageid", "time", "author", "email", "body")
+		form, err := parseForm(r, "pageid", "author", "email", "body")
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		c := engine.NewComment(form["time"][0], form["author"][0],
+		c := engine.NewComment(form["author"][0],
 			form["email"][0], form["body"][0])
 		comments.Save <- engine.SavePair{
 			PageId:  form["pageid"][0],
 			Comment: c,
 		}
-		io.WriteString(w, "more yay")
+		io.WriteString(w, "comment added successfully\n")
 	}
 }
 
